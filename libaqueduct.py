@@ -1,5 +1,34 @@
 import gnupg
 from os import remove
+import requests
+import tarfile
+
+
+
+def targz(source_dir, output_filename):
+    with tarfile.open(output_filename, 'w:gz') as tar:
+        tar.add(source_dir, arcname=path.basename(source_dir))
+
+
+
+def untargz(filepath, dest):
+	with tarfile.open(filepath, 'r:gz') as tfile:
+		tfile.extractall(dest)
+		name = tfile.getnames()[0]
+		remove(filepath)
+		return name
+
+
+
+def upload(url, filepath, postdata):
+	f = open(filepath, 'rb')
+	r = requests.post(
+		url,
+		postdata,
+		files =  {'data' : f}
+	)
+	f.close()
+	return r.text
 
 
 
