@@ -41,7 +41,7 @@ class GPG:
 			if key['uids'][0].startswith(name):
 				self.keyid = key['keyid']
 				self.fingerprint = key['fingerprint']
-				print("Found gpg key " + self.keyid)
+				print("Loaded gpg key " + self.keyid)
 				break
 		if not self.keyid and not recursed:
 			input_data = self.gpg.gen_key_input(key_type="RSA", key_length=2048, name_real=name)
@@ -68,7 +68,7 @@ class GPG:
 			print('stderr: ' + status.stderr)
 			#if status.ok:
 				#with open(filepath, 'rb') as f:
-					#self.gpg.sign_file(f, keyid=self.keyid, output=filepath+'.asc')
+					#self.gpg.sign_file(f, keyid=self.keyid, output=filepath+'.asc') #Using output on this function requires >=0.3.7 (I think)
 
 
 	def decrypt_file(self, filepath, newfile, delete=True):
