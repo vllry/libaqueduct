@@ -1,0 +1,14 @@
+Source: python3-libaqueduct
+Section: unknown
+Priority: optional
+Maintainer: Vallery Lancey <vallerylancey@gmail.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.5
+Homepage: https://github.com/vllry/libaqueduct
+Vcs-Git: git://github.com/vllry/libaqueduct.git
+
+Package: python3-libaqueduct
+Architecture: all
+Depends: ${misc:Depends}, python3, python3-gnupg (>=0.3.6)
+Description: Aqueduct Python library
+ Library of classes/functions common to multiple Aqueduct packages
