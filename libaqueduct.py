@@ -66,9 +66,9 @@ class GPG:
 			status = self.gpg.encrypt_file(f, [recipient], sign=self.fingerprint, output=filepath+'.gpg')
 			print('status: ' + status.status)
 			print('stderr: ' + status.stderr)
-			if status.ok:
-				with open(filepath, 'rb') as f:
-					self.gpg.sign_file(f, keyid=self.keyid, output=filepath+'.asc')
+			#if status.ok:
+				#with open(filepath, 'rb') as f:
+					#self.gpg.sign_file(f, keyid=self.keyid, output=filepath+'.asc')
 
 
 	def decrypt_file(self, filepath, newfile, delete=True):
