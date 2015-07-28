@@ -5,7 +5,7 @@ from os import remove
 
 class GPG:
 
-	def __init__(self, name):
+	def __init__(self, name, recursed=False):
 		self.gpg = gnupg.GPG(gnupghome='/etc/aqueduct/gpg')
 		self.keyid = ""
 		for key in self.gpg.list_keys():
@@ -14,11 +14,11 @@ class GPG:
 				self.fingerprint = key['fingerprint']
 				print("Found gpg key " + self.keyid)
 				break
-		if not self.keyid:
-			input_data = self.gpg.gen_key_input(key_type="RSA", key_length=1024, name_real=name)
-			key = self.gpg.gen_key(input_data) #Investigate rng-tools if VMs have trouble with lack of entropy
-			print(key)
+		if not self.keyid and not recursed:
+			input_data = self.gpg.gen_key_input(key_type="RSA", key_length=2048, name_real=name)
+			self.gpg.gen_key(input_data) #Investigate rng-tools if VMs have trouble with lack of entropy
 			print("Created new gpg key")
+			self.__init__(name, True)
 
 
 	def import_key(self, keypath):
@@ -26,7 +26,7 @@ class GPG:
 			import_result = self.gpg.import_keys(f.read())
 
 
-	def export_key(self, fingerprint=''):
+	def export(self, fingerprint=''):
 		if not fingerprint:
 			fingerprint = self.fingerprint
 		return self.gpg.export_keys(fingerprint)
@@ -38,11 +38,8 @@ class GPG:
 			print('status: ' + status.status)
 			print('stderr: ' + status.stderr)
 			if status.ok:
-				#signature = self.gpg.sign('This is some text :)')
-				signature = self.gpg.sign_file(f, keyid=self.keyid, output=filepath+'.sig')
-				with open(filepath+'.asc', 'w') as asc:
-					print(signature)
-					asc.write(str(signature))
+				with open(filepath, 'rb') as f:
+					self.gpg.sign_file(f, keyid=self.keyid, output=filepath+'.asc')
 
 
 	def decrypt_file(self, filepath, newfile, delete=True):
@@ -61,9 +58,3 @@ class GPG:
 			else:
 				print('ERROR: Could not verify ' + filepath)
 				return False
-
-
-
-gpg = GPG('Aqueduct Builder')
-gpg.encrypt_file('/home/vallery/Development/Aqueduct/libaqueduct/LICENSE', 'B66C2FD3BA1F3B64')
-gpg.verify_file('/home/vallery/Development/Aqueduct/libaqueduct/LICENSE.asc')
