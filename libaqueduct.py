@@ -1,5 +1,5 @@
 import gnupg
-from os import remove
+from os import path, remove
 import requests
 import tarfile
 
