@@ -20,7 +20,7 @@ def untargz(filepath, dest):
 
 
 
-def upload(url, filepath, postdata):
+def upload(filepath, url, postdata={}):
 	f = open(filepath, 'rb')
 	r = requests.post(
 		url,
