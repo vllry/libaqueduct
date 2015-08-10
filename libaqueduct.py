@@ -1,7 +1,53 @@
 import gnupg
 from os import path, remove
+import queue
 import requests
 import tarfile
+
+
+
+#http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
+
+class PriorityQueue(metaclass=Singleton):
+	def __init__(self):
+		self.queue = queue.PriorityQueue() #Mon Capitaine
+
+
+	def delete(self, tup):
+		deleted = False
+		items = []
+		while True:
+			try:
+				i = self.queue.get_nowait()
+			except queue.Empty:
+				break
+			finally:
+				if i[1] == tup:
+					deleted = True
+					break
+				else:
+					items.append(i)
+
+		for i in items:
+			self.queue.put(i) #Don't use the internal put method, since we want to preserve the priority
+
+		return deleted
+
+
+	def get(self):
+		return self.queue.get()
+
+
+	def put(self, tup, prioritymod=0):
+		self.queue.put((time.time()-prioritymod, tup))
 
 
 
@@ -33,7 +79,6 @@ def upload(filepath, url, postdata={}):
 
 
 class GPG:
-
 	def __init__(self, name, recursed=False):
 		self.gpg = gnupg.GPG(gnupghome='/etc/aqueduct/gpg')
 		self.keyid = ""
