@@ -1,5 +1,5 @@
 Source: python3-libaqueduct
-Section: unknown
+Section: python
 Priority: optional
 Maintainer: Vallery Lancey <vallerylancey@gmail.com>
 Build-Depends: debhelper (>= 9)

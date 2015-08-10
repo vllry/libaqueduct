@@ -1,3 +1,12 @@
+python3-libaqueduct (0.0.3) vivid; urgency=medium
+
+  * Fixed copyright-has-url-from-dh_make-boilerplate
+  * Fixed section-is-dh_make-template
+  * Added time module
+
+ -- Vallery Lancey <vallerylancey@gmail.com>  Mon, 10 Aug 2015 09:56:18 -0700
+
+
 python3-libaqueduct (0.0.2) vivid; urgency=low
 
   * Added Singleton class
