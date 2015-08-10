@@ -1,4 +1,12 @@
-python3-libaqueduct (0.0.1) utopic; urgency=low
+python3-libaqueduct (0.0.2) vivid; urgency=low
+
+  * Added Singleton class
+  * Added threadsafe PriorityQueue class
+
+ -- Vallery Lancey <vallerylancey@gmail.com>  Mon, 10 Aug 2015 00:41:57 -0700
+
+
+python3-libaqueduct (0.0.1) vivid; urgency=low
 
   * Initial Release.
 
