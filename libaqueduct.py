@@ -1,9 +1,10 @@
-import gnupg
 from os import path, remove
 import queue
 import requests
 import tarfile
 import time
+
+import gnupg
 
 
 
@@ -12,14 +13,12 @@ def targz(source_dir, output_filename):
         tar.add(source_dir, arcname=path.basename(source_dir))
 
 
-
 def untargz(filepath, dest):
 	with tarfile.open(filepath, 'r:gz') as tfile:
 		tfile.extractall(dest)
 		name = tfile.getnames()[0]
 		remove(filepath)
 		return name
-
 
 
 def upload(filepath, url, postdata={}):
@@ -34,8 +33,6 @@ def upload(filepath, url, postdata={}):
 
 
 
-
-
 #http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python
 class Singleton(type):
     _instances = {}
@@ -43,8 +40,6 @@ class Singleton(type):
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
-
-
 
 
 
@@ -76,8 +71,6 @@ class PriorityQueue(metaclass=Singleton):
 
 	def put(self, tup, prioritymod=0):
 		self.queue.put((time.time()-prioritymod, tup))
-
-
 
 
 
