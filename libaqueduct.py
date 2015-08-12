@@ -32,6 +32,18 @@ def upload(filepath, url, postdata={}):
 	return r.text
 
 
+def download(url, accept_errors=False):
+	try:
+		r = requests.get(url)
+	except requests.exceptions.ConnectionError:
+		return None
+	else:
+		if not accept_errors and (r.status_code < 200 or r.status_code >= 300):
+			return None
+		else:
+			return r.content
+
+
 
 #http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python
 class Singleton(type):
