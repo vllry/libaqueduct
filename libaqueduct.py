@@ -56,7 +56,7 @@ class Singleton(type):
 
 
 class PriorityQueue(metaclass=Singleton):
-	def __init__(self, maxsize=0):
+	def __init__(self, maxsize=0): #Only runs during the first call to PriorityQueue
 		self.queue = queue.PriorityQueue(maxsize) #Mon Capitaine
 
 	def __dict_from_tup__(self, keys, values):
@@ -68,13 +68,16 @@ class PriorityQueue(metaclass=Singleton):
 	def enqueue(self, dictionary, prioritymod=0):
 		self.enqueue_with_priority(dictionary, time.time()-prioritymod)
 
-	def enqueue_with_priority(self, dictionary, priority):
+	def enqueue_nowait(self, dictionary, prioritymod=0):
+		self.enqueue_with_priority(dictionary, time.time()-prioritymod, wait=False)
+
+	def enqueue_with_priority(self, dictionary, priority, wait=True):
 		keys = []
 		values = []
 		for k in dictionary.keys():
 			keys.append(k)
 			values.append(dictionary[k])
-		self.queue.put((priority, keys, values))
+		self.queue.put((priority, keys, values), wait)
 
 	def dequeue(self):
 		return self.dequeue_with_priority()[0]
