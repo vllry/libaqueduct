@@ -56,8 +56,48 @@ class Singleton(type):
 
 
 class PriorityQueue(metaclass=Singleton):
-	def __init__(self):
-		self.queue = queue.PriorityQueue() #Mon Capitaine
+	def __init__(self, maxsize=0):
+		self.queue = queue.PriorityQueue(maxsize) #Mon Capitaine
+
+	def __dict_from_tup__(self, keys, values):
+		dictionary = {}
+		for k in range(0,len(keys)):
+			dictionary[keys[k]] = values[k]
+		return dictionary
+
+	def enqueue(self, dictionary, prioritymod=0):
+		self.enqueue_with_priority(dictionary, time.time()-prioritymod)
+
+	def enqueue_with_priority(self, dictionary, priority):
+		keys = []
+		values = []
+		for k in dictionary.keys():
+			keys.append(k)
+			values.append(dictionary[k])
+		self.queue.put((priority, keys, values))
+
+	def dequeue(self):
+		return self.dequeue_with_priority()[0]
+
+	def dequeue_with_priority(self):
+		score,keys,values = self.queue.get()
+		return self.__dict_from_tup__(keys, values), score
+
+	def list(self):
+		items = []
+		items_nice = []
+		while True:
+			try:
+				i = self.queue.get_nowait()
+			except queue.Empty:
+				break
+			else:
+				items.append(i)
+				items_nice.append(self.__dict_from_tup__(i[1], i[2]))
+
+		for i in items:
+			self.queue.put(i) #Don't enqueue, since we want to preserve the priority
+		return items_nice
 
 	def delete(self, tup):
 		deleted = False
@@ -75,14 +115,8 @@ class PriorityQueue(metaclass=Singleton):
 					items.append(i)
 
 		for i in items:
-			self.queue.put(i) #Don't use the internal put method, since we want to preserve the priority
+			self.queue.put(i) #Don't enqueue, since we want to preserve the priority
 		return deleted
-
-	def get(self):
-		return self.queue.get()
-
-	def put(self, tup, prioritymod=0):
-		self.queue.put((time.time()-prioritymod, tup))
 
 
 
