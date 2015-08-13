@@ -79,11 +79,11 @@ class PriorityQueue(metaclass=Singleton):
 			values.append(dictionary[k])
 		self.queue.put((priority, keys, values), wait)
 
-	def dequeue(self):
-		return self.dequeue_with_priority()[0]
+	def dequeue(self, block=True):
+		return self.dequeue_with_priority(block)[0]
 
-	def dequeue_with_priority(self):
-		score,keys,values = self.queue.get()
+	def dequeue_with_priority(self, block=True):
+		score,keys,values = self.queue.get(block)
 		return self.__dict_from_tup__(keys, values), score
 
 	def list(self):
