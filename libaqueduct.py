@@ -147,10 +147,10 @@ class GPG:
 		with open(keypath) as f:
 			import_result = self.gpg.import_keys(f.read())
 
-	def export(self, fingerprint=''):
-		if not fingerprint:
-			fingerprint = self.fingerprint
-		return self.gpg.export_keys(fingerprint)
+	def export(self, keyid=''):
+		if not keyid: #Can't reference self in the function definition
+			keyid = self.keyid
+		return self.gpg.export_keys(keyid)
 
 	def encrypt_file(self, filepath, recipient, sign=False):
 		with open(filepath, 'rb') as f:
