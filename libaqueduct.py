@@ -160,6 +160,14 @@ class GPG:
 			if status.ok and sign:
 				self.sign_file(filepath)
 
+	def sign_file(self, filepath):
+		with open(filepath, 'rb') as f:
+			self.gpg.sign_file(f, keyid=self.keyid, detach=True, output=filepath+'.asc') #Using output on this function requires >=0.3.7
+
+	def sign_and_encrypt_file(self, filepath, recipient):
+		self.sign_file(filepath)
+		self.encrypt_file(filepath, recipient)
+
 	def decrypt_file(self, filepath, newfile, delete=True):
 		with open(filepath, 'rb') as f:
 			status = self.gpg.decrypt_file(f, output=newfile)
@@ -167,22 +175,16 @@ class GPG:
 				remove(filepath)
 			return status
 
-	def sign_file(self, filepath):
-		with open(filepath, 'rb') as f:
-			self.gpg.sign_file(f, keyid=self.keyid, detach=True, output=filepath+'.asc') #Using output on this function requires >=0.3.7 (I think)
-
-	def encrypt_and_sign_file(self, filepath, recipient):
-		self.encrypt_file(filepath, recipient)
-		self.sign_file(filepath)
-
 	def verify_file(self, datafile, sigfile):
 		with open(sigfile, 'rb') as f:
 			verified = self.gpg.verify_file(f, datafile)
-			print(verified)
 			if verified:
-				print(verified.fingerprint)
-				print(verified.key_id)
-				return True
-			else:
-				print('ERROR: Could not verify ' + datafile)
-				return False
+				return verified.key_id
+			print('ERROR: Could not verify ' + datafile)
+			return None
+
+	def decrypt_and_verify_file(self, datafile, sigfile, outfile):
+		self.decrypt_file(datafile, outfile, True)
+		verified = self.verify_file(outfile, sigfile)
+		remove(sigfile)
+		return verified
