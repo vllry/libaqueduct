@@ -146,6 +146,10 @@ class GPG:
 	def import_key(self, keypath):
 		with open(keypath) as f:
 			import_result = self.gpg.import_keys(f.read())
+			fingerprint = import_result.fingerprints[0]
+			for key in self.pubkeys():
+				if key['fingerprint'] == fingerprint:
+					return key['keyid']
 
 	def export(self, keyid=''):
 		if not keyid: #Can't reference self in the function definition
@@ -162,7 +166,7 @@ class GPG:
 
 	def sign_file(self, filepath):
 		with open(filepath, 'rb') as f:
-			self.gpg.sign_file(f, keyid=self.keyid, detach=True, output=filepath+'.asc') #Using output on this function requires >=0.3.7
+			self.gpg.sign_file(f, keyid=self.keyid, detach=True, output=filepath+'.asc') #Using output on this function requires python3-gnupg >=0.3.7
 
 	def sign_and_encrypt_file(self, filepath, recipient):
 		self.sign_file(filepath)
@@ -188,3 +192,6 @@ class GPG:
 		verified = self.verify_file(outfile, sigfile)
 		remove(sigfile)
 		return verified
+
+	def pubkeys(self):
+		return self.gpg.list_keys(False)
