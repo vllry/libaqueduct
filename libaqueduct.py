@@ -124,7 +124,7 @@ class PriorityQueue(metaclass=Singleton):
 
 
 class GPG:
-	def __init__(self, name, gpg_dir, create=False):
+	def __init__(self, name, gpg_dir, create=False, alert_notexists=True):
 		self.gpg = gnupg.GPG(gnupghome=gpg_dir)
 		self.keyid = ''
 		for key in self.gpg.list_keys():
@@ -140,16 +140,19 @@ class GPG:
 				self.gpg.gen_key(input_data) #Investigate rng-tools if VMs have trouble with lack of entropy
 				print('Created new gpg key')
 				self.__init__(name, gpg_dir, False) #I'm a bad girl
-			else:
+			elif alert_notexists:
 				print('Unable to find GPG key for %s in %s' % (name, gpg_dir))
 
-	def import_key(self, keypath):
+	def import_key(self, keydata):
+		import_result = self.gpg.import_keys(keydata)
+		fingerprint = import_result.fingerprints[0]
+		for key in self.pubkeys():
+			if key['fingerprint'] == fingerprint:
+				return key['keyid']
+
+	def import_key_file(self, keypath):
 		with open(keypath) as f:
-			import_result = self.gpg.import_keys(f.read())
-			fingerprint = import_result.fingerprints[0]
-			for key in self.pubkeys():
-				if key['fingerprint'] == fingerprint:
-					return key['keyid']
+			self.import_key(f.read())
 
 	def export(self, keyid=''):
 		if not keyid: #Can't reference self in the function definition
