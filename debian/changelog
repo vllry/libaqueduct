@@ -1,3 +1,15 @@
+python3-libaqueduct (0.1.0) vivid; urgency=low
+
+  * Changed python3-gnupg dependency to >=0.3.7.
+  * Moved most of the code around.
+  * Added maxsize option to PriorityQueue.
+  * Added & renamed a bunch of functions in PriorityQueue.
+  * Added download() for HTTP GET.
+  * Added & renamed a bunch of functions in GPG.
+
+ -- Vallery Lancey <vallerylancey@gmail.com>  Wed, 09 Sep 2015 17:04:46 -0700
+
+
 python3-libaqueduct (0.0.3) vivid; urgency=medium
 
   * Fixed copyright-has-url-from-dh_make-boilerplate
