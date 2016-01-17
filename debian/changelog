@@ -1,4 +1,4 @@
-python3-libaqueduct (0.1.0) vivid; urgency=low
+python3-libaqueduct (0.1.0) wily; urgency=low
 
   * Changed python3-gnupg dependency to >=0.3.7.
   * Moved most of the code around.
