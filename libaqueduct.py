@@ -7,7 +7,6 @@ import time
 import gnupg
 
 
-
 def targz(source_dir, output_filename):
     with tarfile.open(output_filename, 'w:gz') as tar:
         tar.add(source_dir, arcname=path.basename(source_dir))
@@ -44,8 +43,7 @@ def download(url, accept_errors=False):
 			return r.content
 
 
-
-#http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python
+# http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python
 class Singleton(type):
     _instances = {}
     def __call__(cls, *args, **kwargs):
@@ -54,9 +52,8 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-
 class PriorityQueue(metaclass=Singleton):
-	def __init__(self, maxsize=0): #Only runs during the first call to PriorityQueue
+	def __init__(self, maxsize=0):  # Only runs during the first call to PriorityQueue
 		self.queue = queue.PriorityQueue(maxsize) #Mon Capitaine
 
 	def __dict_from_tup__(self, keys, values):
@@ -120,7 +117,6 @@ class PriorityQueue(metaclass=Singleton):
 		for i in items:
 			self.queue.put(i) #Don't enqueue, since we want to preserve the priority
 		return deleted
-
 
 
 class GPG:
